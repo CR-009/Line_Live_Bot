@@ -1,1 +1,1 @@
-web: python app.py
+web: bin/rails server -p $PORT
