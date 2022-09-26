@@ -59,7 +59,8 @@ def sex_crawler():
         if index_sex < 10:
             title = sex_title.text
             sex_href  = sex_title.select_one("a").get("href")
-            contentsex += "{}\n{}\n".format(title,"https://"+sex_href)
+            sex_http = "https://www.ptt.cc/"
+            contentsex += "{}\n{}\n".format(title,sex_http + sex_href)
         else:
             break
         
