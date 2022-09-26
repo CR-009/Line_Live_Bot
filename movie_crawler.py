@@ -31,27 +31,22 @@ def movie_crawler():
     contentmv=""
 
     #用zip函數 合併 titles,likes_score,expect_percents for迴圈
-    count=0
+    
     for title,like,expect,time,src in zip(titles,likes_score,expect_percents,release_time,srcs) : 
         # 如果標題包含 a 標籤(沒有被刪除),印出來
-        if title.a != None:
-            count+=1
-            #計算第幾個
-            tcount=str(count) 
+        if title.a != None: 
             #取得電影網址
             href= src.get('href')
             # 電影ID
             movie_id = href[-5:]
-            Movie_name = tcount + ". "+ "【"+ title.a.string.replace(" ","").replace("\n","")+"】"
+            Movie_name = "【"+ title.a.string.replace(" ","").replace("\n","")+"】"
             Movie_ID = "電影ID: " + movie_id
             Screening = time.text.replace(" ","").replace("\n","")
             Expect_score = "期待度: "  + expect.text
             Like_score = "綜合評分: " + like['data-num'] + " 分"
             Movie_Http = "影片網址: " + href
             contentmv += "{}\n{}\n{}\n{}\n{}\n{}\n\n".format(Movie_name,Movie_ID,Screening,Expect_score,Like_score,Movie_Http)
-            
+            print(contentmv)
     return contentmv
-
-
 
 movie_crawler()

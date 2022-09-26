@@ -17,7 +17,7 @@ def finance_news_crawler():
             title = d.text
             hreffn  = base + d.get("href")
             contentfn += "{}\n{}\n".format(title, hreffn)
-            print(contentfn)
+            
         else:
             break
         
@@ -61,7 +61,9 @@ def sex_crawler():
             sex_href  = sex_title.select_one("a").get("href")
             sex_http = "https://www.ptt.cc/"
             contentsex += "{}\n{}\n".format(title,sex_http + sex_href)
+            
         else:
             break
         
     return contentsex
+
