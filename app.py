@@ -34,20 +34,20 @@ def callback():
 def handle_message(event):
     msg = event.message.text
 
-    if "焦點新聞" in msg:
+    if msg == "焦點新聞" :
         result = point_news_crawler()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
         )
 
-    elif "財經新聞","財經" in msg:
+    elif msg == "財經新聞" :
         result = finance_news_crawler()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
         )
-    elif "sex","Sex","SEX","西斯","西斯板" in msg:
+    elif msg == "sex","Sex","SEX","西斯","西斯板" :
         result = sex_crawler()
         line_bot_api.reply_message(
             event.reply_token,
