@@ -47,7 +47,7 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=result)
         )
-    elif ("sex","Sex","SEX","西斯","西斯板") in msg:
+    elif "sex" in msg:
         result = sex_crawler()
         line_bot_api.reply_message(
             event.reply_token,
