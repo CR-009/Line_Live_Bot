@@ -41,13 +41,13 @@ def handle_message(event):
             TextSendMessage(text=result)
         )
 
-    elif "財經新聞" in msg:
+    elif "財經新聞","財經" in msg:
         result = finance_news_crawler()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
         )
-    elif "sex" in msg:
+    elif "sex","Sex","SEX","西斯","西斯板" in msg:
         result = sex_crawler()
         line_bot_api.reply_message(
             event.reply_token,
