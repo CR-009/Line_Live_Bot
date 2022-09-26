@@ -1,10 +1,11 @@
 import os
 from crawler import *
 from linebot.models import *
+from picture_search import *
+from movie_crawler import *
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from flask import Flask, request, abort, render_template
-from picture_search import *
 import random
 
 app = Flask(__name__)
@@ -53,8 +54,13 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=result)
         )
-
-    elif "圖片"in msg:
+    elif "電影" in msg:
+        result = movie_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=result)
+        )
+    elif "圖片" in msg:
         result = pic_find(event)
         line_bot_api.reply_message(
             event.reply_token,
@@ -63,7 +69,7 @@ def handle_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="暫時不支援，請重新輸入。")
+            TextSendMessage(text="輸入錯誤，請重新輸入。")
         )
 
 
