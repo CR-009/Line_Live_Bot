@@ -45,4 +45,23 @@ def point_news_crawler():
         
     return contentpn
 
-point_news_crawler()
+def sex_crawler():
+    
+    url="https://www.ptt.cc/bbs/sex/index.html"
+    my_headers = {'cookie':'over18=1'}
+    response = requests.get(url,headers=my_headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    sex_titles = soup.find_all('div','title')
+   
+    contentsex = ""
+
+    for index_sex, sex_title in enumerate(sex_titles):
+        if index_sex < 10:
+            title = sex_title.text
+            sex_href  = sex_title.select_one("a").get("href")
+            contentsex += "{}\n{}\n".format(title, sex_href)
+            print(contentsex)
+        else:
+            break
+        
+    return contentsex
