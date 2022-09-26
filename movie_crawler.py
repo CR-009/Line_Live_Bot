@@ -28,11 +28,8 @@ def movie_crawler():
     #影片網址
     srcs = soup.find_all(class_="btn_s_introduction")
 
-    print(" ")
-    print("   電影資訊-上映中")
-    print(" ")
-
     contentmv=""
+
     #用zip函數 合併 titles,likes_score,expect_percents for迴圈
     count=0
     for title,like,expect,time,src in zip(titles,likes_score,expect_percents,release_time,srcs) : 
@@ -52,5 +49,9 @@ def movie_crawler():
             Like_score = "綜合評分: " + like['data-num'] + " 分"
             Movie_Http = "影片網址: " + href
             contentmv += "{}\n{}\n{}\n{}\n{}\n{}\n\n".format(Movie_name,Movie_ID,Screening,Expect_score,Like_score,Movie_Http)
-            print(contentmv)
+            
     return contentmv
+
+
+
+movie_crawler()
