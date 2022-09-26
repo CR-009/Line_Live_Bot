@@ -63,7 +63,7 @@ def handle_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="輸入錯誤，請重新輸入。")
+            TextSendMessage(text="暫時不支援，請重新輸入。")
         )
 
 
