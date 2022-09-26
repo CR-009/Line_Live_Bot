@@ -34,13 +34,13 @@ def callback():
 def handle_message(event):
     msg = event.message.text
 
-    if "焦點新聞" in msg:
+    if "財經新聞" in msg:
         result = news_crawler()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
         )
-    elif "圖片"in msg:
+    elif "圖片" in msg:
         result = pic_find(event)
         line_bot_api.reply_message(
             event.reply_token,
