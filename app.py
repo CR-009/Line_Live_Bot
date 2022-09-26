@@ -54,12 +54,6 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=result)
         )
-    elif "電影時刻表" in msg:
-        result = movie_crawler
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=result)
-        )
     elif "圖片" in msg:
         result = pic_find(event)
         line_bot_api.reply_message(
