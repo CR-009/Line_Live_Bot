@@ -2,7 +2,6 @@ import os
 from crawler import *
 from linebot.models import *
 from picture_search import *
-from movie_crawler import *
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from flask import Flask, request, abort, render_template
