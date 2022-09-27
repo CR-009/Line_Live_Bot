@@ -47,14 +47,44 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=result)
         )
-    elif "sex" in msg:
-        result = sex_crawler()
+    
+    elif "圖片" in msg:
+        result = pic_find(event)
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
         )
-    elif "圖片" in msg:
-        result = pic_find(event)
+    
+    elif "熱門看板" in msg :
+        result = PTT_HOT_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=result)
+        )
+
+    elif "西斯" in msg:
+        result = PTT_Sex_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=result)
+        )
+
+    elif "八卦" in msg :
+        result = PTT_Gossiping_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=result)
+        )
+
+    elif "追劇" in msg :
+        result = finance_news_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=result)
+        )
+        
+    elif "動漫" in msg :
+        result = finance_news_crawler()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
