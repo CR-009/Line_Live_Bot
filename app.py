@@ -77,14 +77,14 @@ def handle_message(event):
         )
 
     elif "追劇" in msg :
-        result = finance_news_crawler()
+        result = Gimy_new()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
         )
         
     elif "動漫" in msg :
-        result = finance_news_crawler()
+        result = Gimy_Anime()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
