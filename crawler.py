@@ -116,4 +116,50 @@ def PTT_Sex_crawler():
  
     return contentSex
 
+#PTT-租屋板-蘆洲
+def PTT_LURent_crawler():
+    
+    url="https://www.ptt.cc/bbs/Rent_apart/search?q=%E8%98%86%E6%B4%B2"
+    my_headers = {'cookie':'over18=1'}
+    response = requests.get(url,headers=my_headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.find_all('div','title')
+    
+    contentLURent= ""
+   
+    for index,LUrenttitle in enumerate(titles):
+        if LUrenttitle.a != None:
+            title = LUrenttitle.text
+            PTT_href  = LUrenttitle.select_one("a").get("href")
+            PTT_http = "https://www.ptt.cc/"
+            contentLURent += "{}\n{}\n".format(title,PTT_http + PTT_href)
+            print(contentLURent)
+                
+        else:
+            break
+ 
+    return contentLURent
 
+#PTT-租屋板
+def PTT_Rent_crawler():
+    
+    url="https://www.ptt.cc/bbs/Rent_apart/index.html"
+    my_headers = {'cookie':'over18=1'}
+    response = requests.get(url,headers=my_headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.find_all('div','title')
+    
+    contentRent= ""
+   
+    for index,renttitle in enumerate(titles):
+        if renttitle.a != None:
+            title = renttitle.text
+            PTT_href  = renttitle.select_one("a").get("href")
+            PTT_http = "https://www.ptt.cc/"
+            contentRent += "{}\n{}\n".format(title,PTT_http + PTT_href)
+            # print(contentRent)
+                
+        else:
+            break
+ 
+    return contentRent

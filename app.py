@@ -10,7 +10,7 @@ import random
 
 app = Flask(__name__)
 
-Channel_Access_Token = 'iSMOZduFbHkTglNwWIKqaYgzO9B9LL0VpcdV4/1QEgbYrNekuQSJBxDV5yi9yoLquDizYjeux4NZBHOUTx3rwxcSFZaDw+tixor0ZtoUMuFrSipfQZb+JLOY50s8IcF6PAYRwUaJywp9oaN2sz03MgdB04t89/1O/w1cDnyilFU='
+Channel_Access_Token = 'Bearer iSMOZduFbHkTglNwWIKqaYgzO9B9LL0VpcdV4/1QEgbYrNekuQSJBxDV5yi9yoLquDizYjeux4NZBHOUTx3rwxcSFZaDw+tixor0ZtoUMuFrSipfQZb+JLOY50s8IcF6PAYRwUaJywp9oaN2sz03MgdB04t89/1O/w1cDnyilFU='
 line_bot_api    = LineBotApi(Channel_Access_Token)
 Channel_Secret  = '1d60146099c8460565358a489b0a0524'
 handler = WebhookHandler(Channel_Secret)
@@ -76,6 +76,21 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=result)
         )
+    
+    elif "租屋" in msg :
+        result = PTT_Rent_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=result)
+        )
+
+    elif "蘆洲租屋" in msg :
+        result = PTT_LURent_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=result)
+        )
+
 
     else:
         line_bot_api.reply_message(
