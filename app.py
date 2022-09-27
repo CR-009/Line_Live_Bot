@@ -1,4 +1,5 @@
 import os
+import requests
 from crawler import *
 from linebot.models import *
 from picture_search import *

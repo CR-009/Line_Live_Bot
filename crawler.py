@@ -142,6 +142,7 @@ def Gimy_new():
 #Gimy-熱門動漫
 def Gimy_Anime():
 
+
     url = 'https://gimy.app/type/30.html'
 
     response = requests.get(url,headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'}
@@ -149,7 +150,7 @@ def Gimy_Anime():
         
     soup = BeautifulSoup(response.text, "html.parser")
     titles = soup.find_all('div','title')
-    print(titles)
+
     contentgian=""
 
     for index,title in enumerate(titles):
@@ -158,6 +159,9 @@ def Gimy_Anime():
                     Gimy_title = title.text
                     Gimy_href  = title.select_one("a").get("href")
                     Gimy_http = "https://gimy.app/"
-                    contentgimy += "{}\n{}\n".format(Gimy_title,Gimy_http + Gimy_href)
-                    print(contentgimy)
+                    contentgian += "{}\n{}\n".format(Gimy_title,Gimy_http + Gimy_href)
+                    # print(contentgian)
     return contentgian
+
+# Gimy_new()
+# Gimy_Anime()
