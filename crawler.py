@@ -157,9 +157,10 @@ def PTT_Rent_crawler():
             PTT_href  = renttitle.select_one("a").get("href")
             PTT_http = "https://www.ptt.cc/"
             contentRent += "{}\n{}\n".format(title,PTT_http + PTT_href)
-            # print(contentRent)
+            print(contentRent)
                 
         else:
             break
  
     return contentRent
+
