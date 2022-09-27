@@ -63,21 +63,21 @@ def handle_message(event):
             TextSendMessage(text=result)
         )
 
-    elif "西斯" in msg:
+    elif "西斯板" in msg:
         result = PTT_Sex_crawler()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
         )
 
-    elif "八卦" in msg :
+    elif "八卦板" in msg :
         result = PTT_Gossiping_crawler()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=result)
         )
     
-    elif "租屋" in msg :
+    elif "租屋板" in msg :
         result = PTT_Rent_crawler()
         line_bot_api.reply_message(
             event.reply_token,
