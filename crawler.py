@@ -129,19 +129,20 @@ def Gimy_new():
 
     contentgimy=""
 
-    for index,title in enumerate(titles):
+    for index,Gititle in enumerate(titles):
             if index < 10:
-                if title.a != None:
-                    Gimy_title = title.text
-                    Gimy_href  = title.select_one("a").get("href")
+                if Gititle.a != None:
+                    Gimy_title = Gititle.text
+                    Gimy_href  = Gititle.select_one("a").get("href")
                     Gimy_http = "https://gimy.app/"
                     contentgimy += "{}\n{}\n".format(Gimy_title,Gimy_http + Gimy_href)
                     # print(contentgimy)
+            else:
+                break
     return contentgimy
 
 #Gimy-熱門動漫
 def Gimy_Anime():
-
 
     url = 'https://gimy.app/type/30.html'
 
@@ -153,15 +154,17 @@ def Gimy_Anime():
 
     contentgian=""
 
-    for index,title in enumerate(titles):
-            if index < 10:
-                if title.a != None:
-                    Gimy_title = title.text
-                    Gimy_href  = title.select_one("a").get("href")
-                    Gimy_http = "https://gimy.app/"
-                    contentgian += "{}\n{}\n".format(Gimy_title,Gimy_http + Gimy_href)
+    for index,Antitle in enumerate(titles):
+            if index < 5:
+                if Antitle.a != None:
+                    GiAn_title = Antitle.text
+                    GiAn_href  = Antitle.select_one("a").get("href")
+                    GiAn_http = "https://gimy.app/"
+                    contentgian += "{}\n{}\n".format(GiAn_title,GiAn_http + GiAn_href)
                     # print(contentgian)
+            else:
+                break
     return contentgian
 
 # Gimy_new()
-# Gimy_Anime()
+Gimy_Anime()
