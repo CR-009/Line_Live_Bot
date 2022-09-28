@@ -3,6 +3,8 @@ import requests
 from crawler import *
 from linebot.models import *
 from picture_search import *
+from flex_mes import *
+import json
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from flask import Flask, request, abort, render_template
@@ -57,17 +59,17 @@ def handle_message(event):
         )
     
     elif "熱門看板" in msg :
-        result = PTT_HOT_crawler()
+        message = PTT_HOT_crawler()
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=result)
+            line_bot_api.reply_message(event.reply_token, message)
         )
 
-    elif "西斯板" in msg:
+    elif "sex" in msg:
         result = PTT_Sex_crawler()
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=result)
+            line_bot_api.reply_message(event.reply_token, message)
         )
 
     elif "八卦板" in msg :
@@ -91,14 +93,28 @@ def handle_message(event):
             TextSendMessage(text=result)
         )
 
-
+    elif "新聞選單" in msg :
+         FlexMessage = json.load(open('list.json','r',encoding = 'utf-8'))
+         line_bot_api.reply_message(
+            event.reply_token,FlexSendMessage('新聞選單',FlexMessage)
+         )
+    
+    
+            
     else:
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="輸入錯誤，請重新輸入。")
         )
+    
 
-
+#測試用ngrok
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 80))
     app.run(host='0.0.0.0', port=port)
+
+#上傳用 Heroku
+# if __name__ == "__main__":
+#     port = int(os.environ.get('PORT', 5000))
+#     app.run(host='0.0.0.0', port=port)
+

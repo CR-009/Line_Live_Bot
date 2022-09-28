@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from flex_mes import *
 
 #財經新聞
 def finance_news_crawler():
@@ -19,7 +20,7 @@ def finance_news_crawler():
             contentfn += "{}\n{}\n".format(title, hreffn)
             
         else:
-            break
+            continue
         
     return contentfn
 
@@ -54,18 +55,139 @@ def PTT_HOT_crawler():
     soup = BeautifulSoup(response.text, "html.parser")
     titles = soup.find_all('span','L34 nowrap listTitle')
 
-    contentHOT = ""
-
+    # contentHOT = ""
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+    i=0
     for index,Htitle in enumerate(titles):
         if index < 10:
             if Htitle.a != None:
                 title = Htitle.text
                 PTT_href  = Htitle.select_one("a").get("href")
-                PTT_http = "https://disp.cc/b/"
-                contentHOT += "{}\n{}\n\n".format(title,PTT_http + PTT_href)
-                # print(contentHOT)
+                PTT_base = "https://disp.cc/b/"
+                PTT_http = PTT_base + PTT_href
+                # contentHOT += "{}\n{}\n\n".format(title,PTT_http)
+                # # print(contentHOT)
         
-    return contentHOT
+                bubble = {
+                            "type": "bubble",
+                            "direction": "ltr",
+                            "hero": {
+                                "type": "image",
+                                "url": "https://i.imgur.com/g6Na3D6.png",
+                                "size": "full",
+                                "aspectRatio": "20:13",
+                                "aspectMode": "cover"
+                            },
+                            "body": {
+                                "type": "box",
+                                "layout": "vertical",
+                                "spacing": "sm",
+                                "contents": [
+                                {
+                                    "type": "text",
+                                    "text": title,
+                                    "weight": "bold",
+                                    "size": "3xl",
+                                    "wrap": True,
+                                    "contents": []
+                                }
+                                ]
+                            },
+                            "footer": {
+                                "type": "box",
+                                "layout": "vertical",
+                                "spacing": "sm",
+                                "contents": [
+                                {
+                                    "type": "button",
+                                    "action": {
+                                    "type": "uri",
+                                    "label": "點擊前往",
+                                    "uri": PTT_http
+                                    }
+                                }
+                                ]
+                            }
+                            }
+            contents['contents'].append(bubble)
+            index+=1
+    message = FlexSendMessage(alt_text="熱門看板",contents=contents)
+
+    return message
+
+
+#PTT-西斯板
+def PTT_Sex_crawler():
+    
+    url="https://www.ptt.cc/bbs/Sex/index.html"
+    my_headers = {'cookie':'over18=1'}
+    response = requests.get(url,headers=my_headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.find_all('div','title')
+    
+    # contentSex = ""
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+    i=0
+    for index,Stitle in enumerate(titles):
+        if index < 10:
+            if Stitle.a != None:
+                title = Stitle.text
+                PTT_href  = Stitle.select_one("a").get("href")
+                PTT_base = "https://www.ptt.cc/"
+                PTT_http = PTT_base + PTT_href
+                # contentSex += "{}\n{}\n\n".format(title,PTT_http)
+                # print(contentSex)
+                
+                bubble = {
+                            "type": "bubble",
+                            "direction": "ltr",
+                            "hero": {
+                                "type": "image",
+                                "url": "https://i.imgur.com/g6Na3D6.png",
+                                "size": "full",
+                                "aspectRatio": "20:13",
+                                "aspectMode": "cover"
+                            },
+                            "body": {
+                                "type": "box",
+                                "layout": "vertical",
+                                "spacing": "sm",
+                                "contents": [
+                                {
+                                    "type": "text",
+                                    "text": title,
+                                    "weight": "bold",
+                                    "size": "3xl",
+                                    "wrap": True,
+                                    "contents": []
+                                }
+                                ]
+                            },
+                            "footer": {
+                                "type": "box",
+                                "layout": "vertical",
+                                "spacing": "sm",
+                                "contents": [
+                                {
+                                    "type": "button",
+                                    "action": {
+                                    "type": "uri",
+                                    "label": "點擊前往",
+                                    "uri": PTT_http
+                                    }
+                                }
+                                ]
+                            }
+                            }
+            contents['contents'].append(bubble)
+            index+=1
+    message = FlexSendMessage(alt_text="sex",contents=contents)
+
+    return message
 
 #PTT-八卦版
 def PTT_Gossiping_crawler():
@@ -86,35 +208,7 @@ def PTT_Gossiping_crawler():
                 PTT_http = "https://www.ptt.cc/"
                 contentGossiping += "{}\n{}\n".format(title,PTT_http + PTT_href)
                 # print(contentGossiping)
-        else:
-            break      
-        
-    return contentGossiping
 
-#PTT-西斯板
-def PTT_Sex_crawler():
-    
-    url="https://www.ptt.cc/bbs/Sex/index.html"
-    my_headers = {'cookie':'over18=1'}
-    response = requests.get(url,headers=my_headers)
-    soup = BeautifulSoup(response.text, "html.parser")
-    titles = soup.find_all('div','title')
-    
-    contentSex = ""
-   
-    for index,Stitle in enumerate(titles):
-        if index < 7:
-            if Stitle.a != None:
-                title = Stitle.text
-                PTT_href  = Stitle.select_one("a").get("href")
-                PTT_http = "https://www.ptt.cc/"
-                contentSex += "{}\n{}\n".format(title,PTT_http + PTT_href)
-                # print(contentSex)
-                
-        else:
-            break
- 
-    return contentSex
 
 #PTT-租屋板-蘆洲
 def PTT_LURent_crawler():
