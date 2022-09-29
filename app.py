@@ -1,22 +1,21 @@
-import os
-import requests
+#呼叫自己的功能函數
+from config import *
+from Function import *
 from crawler import *
+
+#導入python的函數
+import os
+from flask import Flask, request, abort, render_template
 from linebot.models import *
-from picture_search import *
-from flex_mes import *
-import json
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from flask import Flask, request, abort, render_template
-import random
+
 
 app = Flask(__name__)
-
-Channel_Access_Token = 'iSMOZduFbHkTglNwWIKqaYgzO9B9LL0VpcdV4/1QEgbYrNekuQSJBxDV5yi9yoLquDizYjeux4NZBHOUTx3rwxcSFZaDw+tixor0ZtoUMuFrSipfQZb+JLOY50s8IcF6PAYRwUaJywp9oaN2sz03MgdB04t89/1O/w1cDnyilFU='
-line_bot_api    = LineBotApi(Channel_Access_Token)
-Channel_Secret  = '1d60146099c8460565358a489b0a0524'
-handler = WebhookHandler(Channel_Secret)
-
+# Channel Access Token
+line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
+# Channel Secret
+handler = WebhookHandler(CHANNEL_SECRET)
 
 # handle request from "/callback" 
 @app.route("/callback", methods=['POST'])
@@ -37,70 +36,21 @@ def callback():
 def handle_message(event):
     msg = event.message.text
 
-    if "焦點新聞" in msg :
-        result = point_news_crawler()
+    if "你好" in msg:
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=result)
+            TextSendMessage(text="您好，\n請問今天要查詢什麼呢?")
         )
+    elif "新聞選單" in msg:
+        message = news_list()
+        line_bot_api.reply_message(event.reply_token, message)
 
-    elif "財經新聞" in msg :
-        result = finance_news_crawler()
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=result)
-        )
-    
-    elif "圖片" in msg:
-        result = pic_find(event)
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=result)
-        )
-    
-    elif "熱門看板" in msg :
-        message = PTT_HOT_crawler()
-        line_bot_api.reply_message(
-            event.reply_token,
-            line_bot_api.reply_message(event.reply_token, message)
-        )
+    elif 'YT,' in msg:
+        keyword = msg.split(',')[1]
+        message = youtube_vedio_parser(keyword)
+        line_bot_api.reply_message(event.reply_token, message)
 
-    elif "sex" in msg:
-        result = PTT_Sex_crawler()
-        line_bot_api.reply_message(
-            event.reply_token,
-            line_bot_api.reply_message(event.reply_token, message)
-        )
-
-    elif "八卦板" in msg :
-        result = PTT_Gossiping_crawler()
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=result)
-        )
-    
-    elif "租屋板" in msg :
-        result = PTT_Rent_crawler()
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=result)
-        )
-
-    elif "蘆洲租屋" in msg :
-        result = PTT_LURent_crawler()
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=result)
-        )
-
-    elif "新聞選單" in msg :
-         FlexMessage = json.load(open('list.json','r',encoding = 'utf-8'))
-         line_bot_api.reply_message(
-            event.reply_token,FlexSendMessage('新聞選單',FlexMessage)
-         )
-    
-    
-            
+                
     else:
         line_bot_api.reply_message(
             event.reply_token,
@@ -113,7 +63,7 @@ def handle_message(event):
 #     port = int(os.environ.get('PORT', 80))
 #     app.run(host='0.0.0.0', port=port)
 
-#上傳用 Heroku
+# 上傳用 Heroku
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
