@@ -1,0 +1,42 @@
+{
+    "type": "carousel",
+    "contents": [
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "hero": {
+          "type": "image",
+          "url": "https://i.imgur.com/FllfPCv.png",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "message",
+            "label": "焦點新聞",
+            "text": "焦點新聞"
+          }
+        }
+      },
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "action": {
+          "type": "message",
+          "label": "財經新聞",
+          "text": "財經新聞"
+        },
+        "hero": {
+          "type": "image",
+          "url": "https://i.imgur.com/giWLwAk.png",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "message",
+            "label": "財經新聞",
+            "text": "財經新聞"
+          }
+        }
+      }
+    ]
+  }

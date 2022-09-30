@@ -6,9 +6,12 @@ from config import *
 import time
 import random
 import string
+from bs4 import BeautifulSoup
+import requests
+from urllib.parse import quote 
 
 
-
+# YT_關鍵字搜尋
 def youtube_vedio_parser(keyword):
 
     url = 'https://tw.youtube.com/'
@@ -16,7 +19,7 @@ def youtube_vedio_parser(keyword):
     #建立chrome設定
     chromeOption = webdriver.ChromeOptions()
     #設定瀏覽器的user agent
-    chromeOption.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0')
+    # chromeOption.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0')
     chromeOption.add_argument("start-maximized")
     chromeOption.add_argument('--headless')
     chromeOption.add_argument('--no-sandbox')
@@ -45,11 +48,12 @@ def youtube_vedio_parser(keyword):
 
     #======================存取搜尋到的結果的螢幕截圖===========================
     #在static資料夾中建立一個暫存圖片路徑
-    image_path = './static/tmp/test.png'
-    #刷新網頁 => 移除首頁的元素
+    # image_path = './static/tmp/test.png'
+
+    # #刷新網頁 => 移除首頁的元素
     driver.refresh()
-    #將目前的頁面截圖儲存至暫存圖片路徑
-    driver.save_screenshot(image_path)
+    # #將目前的頁面截圖儲存至暫存圖片路徑
+    # driver.save_screenshot(image_path)
     #休息2秒
     time.sleep(2)
 
@@ -78,13 +82,13 @@ def youtube_vedio_parser(keyword):
     yt_vedio_images = []
     yt_vedio_images_urls = driver.find_elements(By.CSS_SELECTOR,'.yt-simple-endpoint.inline-block.style-scope.ytd-thumbnail yt-img-shadow img#img')
 
-    #將每個圖片的縮圖放入圖片list
+    #將每個圖片的縮圖放入圖片list-
     for image in yt_vedio_images_urls:
         if str(type(image.get_attribute('src'))) != "<class 'NoneType'>":
             if 'ytimg' in image.get_attribute('src') or '720.jpg?' in image.get_attribute('src') or 'hqdefault.jpg?' in image.get_attribute('src'):
                 if len(yt_vedio_images)<10:
                     yt_vedio_images.append(image.get_attribute('src'))
-                    print(image.get_attribute('src'))
+                    # print(image.get_attribute('src'))
     
 
     #======================從網頁獲取前十個影片標題===========================
@@ -93,7 +97,7 @@ def youtube_vedio_parser(keyword):
     yt_vedio_infos = driver.find_elements(By.CSS_SELECTOR,'#video-title.ytd-video-renderer')
     for infos in yt_vedio_infos:
         yt_title_list.append(infos.get_attribute('title'))
-        print(infos.get_attribute('title'))
+        # print(infos.get_attribute('title'))
 
     #===================從網頁獲取前十個發布者頻道資訊========================
     #建立頻道資訊列表(圖片)
@@ -101,7 +105,7 @@ def youtube_vedio_parser(keyword):
     yt_channel_infos_image_list = driver.find_elements(By.CSS_SELECTOR,'#channel-info a yt-img-shadow #img')
     for infos in yt_channel_infos_image_list:
         yt_channel_infos_image_urls.append(infos.get_attribute('src'))
-        print(infos.get_attribute('src'))
+        # print(infos.get_attribute('src'))
 
     #建立頻道資訊列表(頻道名稱)
     yt_channel_infos_names = []
@@ -115,23 +119,567 @@ def youtube_vedio_parser(keyword):
   #==============將爬取到的資訊以FlexMessage回傳至主程式===================
     message = []   
             
-    #瀏覽器螢幕截圖
+    #瀏覽器螢幕截圖-下面三行關掉就不會有螢幕截圖傳送過來
     #建立一個隨機4碼的字串，使圖片縮圖瀏覽不會因為讀取同一個url快取而重覆
-    random_code = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(4))
-    message.append(ImageSendMessage(original_content_url='https://linelivebot.herokuapp.com/' + '/static/tmp/test.png?'+random_code,preview_image_url='https://linelivebot.herokuapp.com/' + '/static/tmp/test.png?'+random_code))
-
+    # random_code = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(4))
+    # message.append(ImageSendMessage(original_content_url= HEROKU_APP_URL + '/static/tmp/test.png?'+random_code,preview_image_url= HEROKU_APP_URL + '/static/tmp/test.png?'+random_code))
+    
     #回傳搜尋結果的FlexMessage
     message.append(yt_carousel('YT搜尋結果',yt_vedio_images,vedio_url_list,yt_title_list,yt_channel_infos_image_urls,yt_channel_infos_names))
     return message
 
+#PTT-西斯板
+def PTT_Sex_crawler():
+    
+    url="https://disp.cc/b/sex"
+    my_headers = {'cookie':'over18=1'}
+    response = requests.get(url,headers=my_headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.find_all('span','L34 nowrap listTitle')
+
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+    index=0
+    for index,Stitle in enumerate(titles):
+        if index < 10:
+            if Stitle.a != None:
+                title = Stitle.text
+                PTT_href  = Stitle.select_one("a").get("href")
+                PTT_base = "https://disp.cc/b/"
+                PTT_http = PTT_base + PTT_href
+        
+                bubble = {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": "https://i.imgur.com/EhqYOr0.png",
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": PTT_http
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": title,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
+                                "action": {
+                                "type": "uri",
+                                "label": "點擊前往",
+                                "uri": PTT_http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [],
+                                "margin": "sm"
+                            }
+                            ],
+                            "flex": 0
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contenthts)
+    message = FlexSendMessage(alt_text="西斯板",contents=contents)
+
+    return message
+
+#財經新聞
+def finance_news_crawler():
+    base = "https://news.cnyes.com"
+    url  = "https://news.cnyes.com/news/cat/headline"
+    re   = requests.get(url)
+
+    contentfn = ""
+
+    soup = BeautifulSoup(re.text, "html.parser")
+    data = soup.find_all("a", {"class": "_1Zdp"})
+
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+    index=0
+    for index, d in enumerate(data):
+        if index <10:
+            title = d.text
+            http  = base + d.get("href")
+            # contentfn += "{}\n{}\n".format(title, hreffn)
+            
+            bubble = {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": "https://i.imgur.com/giWLwAk.png",
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": http
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": title,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
+                                "action": {
+                                "type": "uri",
+                                "label": "點擊前往",
+                                "uri": http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [],
+                                "margin": "sm"
+                            }
+                            ],
+                            "flex": 0
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contents)
+    message = FlexSendMessage(alt_text="財經新聞",contents=contents)
+
+    return message
+
+#焦點新聞
+def point_news_crawler():
+
+    url = "https://tw.yahoo.com/"
+    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'}
+
+    list_req = requests.get(url,headers=headers)
+    soup = BeautifulSoup(list_req.content, "html.parser")
+
+    news_list = soup.find_all('a',{"class":"Fz(16px) LineClamp(1,20px) Fw(700) Td(n) Td(u):h C(#324fe1) V(h) active_V(v)"})
+
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+    index=0
+    for index,pointtitle in enumerate(news_list):
+        if index < 10:
+            title = pointtitle.text
+            http  = pointtitle.get("href") 
+
+            bubble = {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": "https://i.imgur.com/FllfPCv.png",
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": http
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": title,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
+                                "action": {
+                                "type": "uri",
+                                "label": "點擊前往",
+                                "uri": http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [],
+                                "margin": "sm"
+                            }
+                            ],
+                            "flex": 0
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contents)
+    message = FlexSendMessage(alt_text="熱門文章",contents=contents)
+
+    return message
+# point_news_crawler()
+#PTT-熱門看板
+def PTT_HOT_crawler():
+    
+    url="https://disp.cc/b/main"
+    my_headers = {'cookie':'over18=1'}
+    response = requests.get(url,headers=my_headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.find_all('span','ht_title')
+
+    
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+    index=0
+    for index,Stitle in enumerate(titles):
+        if index < 10:
+            if Stitle.a != None:
+                title = Stitle.text
+                PTT_href  = Stitle.select_one("a").get("href")
+                PTT_base = "https://disp.cc/b/"
+                PTT_http = PTT_base + PTT_href
+        
+                bubble = {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": "https://i.imgur.com/kylWAB8.png",
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": PTT_http
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": title,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
+                                "action": {
+                                "type": "uri",
+                                "label": "點擊前往",
+                                "uri": PTT_http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [],
+                                "margin": "sm"
+                            }
+                            ],
+                            "flex": 0
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contents)
+    message = FlexSendMessage(alt_text="熱門文章",contents=contents)
+
+    return message
+
+#PTT-八卦版
+def PTT_Gossiping_crawler():
+    
+    url="https://disp.cc/b/Gossiping"
+    headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'}
+    response = requests.get(url,headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.find_all('span','L34 nowrap listTitle')
+
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+    index=0
+    for index,Gtitle in enumerate(titles):
+        if index < 10:
+            if Gtitle.a != None:
+                title = Gtitle.text
+                PTT_href  = Gtitle.select_one("a").get("href")
+                PTT_base = "https://disp.cc/b/"
+                PTT_http = PTT_base + PTT_href
+                print(PTT_http)
+        
+                bubble = {  "type": "bubble",
+                            "hero": {
+                            "type": "image",
+                            "url": "https://i.imgur.com/SY6xc3s.png",
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": PTT_http
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": title,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
+                                "action": {
+                                "type": "uri",
+                                "label": "點擊前往",
+                                "uri": PTT_http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [],
+                                "margin": "sm"
+                            }
+                            ],
+                            "flex": 0
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contenthts)
+    message = FlexSendMessage(alt_text="八卦板",contents=contents)
+
+    return message
+
+#PTT-租屋板-蘆洲
+def PTT_LURent_crawler():
+    
+    url="https://www.ptt.cc/bbs/Rent_apart/search?q=%E8%98%86%E6%B4%B2"
+    my_headers = {'cookie':'over18=1'}
+    response = requests.get(url,headers=my_headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.find_all('div','title')
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+    index=0
+    for index,Rtitle in enumerate(titles):
+        if index < 10:
+            if Rtitle.a != None:
+                title = Rtitle.text
+                PTT_href  = Rtitle.select_one("a").get("href")
+                PTT_base = "https://www.ptt.cc/"
+                PTT_http = PTT_base + PTT_href
+                print(PTT_http)
+        
+                bubble = {  "type": "bubble",
+                            "hero": {
+                            "type": "image",
+                            "url": "https://i.imgur.com/POfRi3G.png",
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": PTT_http
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": title,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
+                                "action": {
+                                "type": "uri",
+                                "label": "點擊前往",
+                                "uri": PTT_http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [],
+                                "margin": "sm"
+                            }
+                            ],
+                            "flex": 0
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contents)
+    message = FlexSendMessage(alt_text="蘆洲租屋",contents=contents)
+
+    return message
+# PTT_LURent_crawler()
+
+#PTT-租屋板
+def PTT_Rent_crawler():
+
+    url="https://www.ptt.cc/bbs/Rent_apart/index.html"
+    my_headers = {'cookie':'over18=1'}
+    response = requests.get(url,headers=my_headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.find_all('div','title')
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+    index=0
+    for index,Rtitle in enumerate(titles):
+        if index < 10:
+            if Rtitle.a != None:
+                title = Rtitle.text
+                PTT_href  = Rtitle.select_one("a").get("href")
+                PTT_base = "https://www.ptt.cc/"
+                PTT_http = PTT_base + PTT_href
+                print(PTT_http)
+        
+                bubble = {  "type": "bubble",
+                            "hero": {
+                            "type": "image",
+                            "url": "https://i.imgur.com/POfRi3G.png",
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": PTT_http
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": title,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
+                                "action": {
+                                "type": "uri",
+                                "label": "點擊前往",
+                                "uri": PTT_http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [],
+                                "margin": "sm"
+                            }
+                            ],
+                            "flex": 0
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contents)
+    message = FlexSendMessage(alt_text="租屋板",contents=contents)
+
+    return message
 
 
-if __name__=='__main__':
-    from linebot import LineBotApi, WebhookHandler
-    from linebot.exceptions import InvalidSignatureError
-    from linebot.models import *
-    message = youtube_vedio_parser('keyword')
-    line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
-    line_bot_api.push_message(USERID,message)
 
 

@@ -1,0 +1,86 @@
+{
+    "type": "carousel",
+    "contents": [
+      {
+        "type": "bubble",
+        "size": "mega",
+        "direction": "ltr",
+        "hero": {
+          "type": "image",
+          "url": "https://i.imgur.com/g6Na3D6.png",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "message",
+            "label": "熱門文章",
+            "text": "熱門文章"
+          }
+        }
+      },
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "hero": {
+          "type": "image",
+          "url": "https://i.imgur.com/SY6xc3s.png",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "message",
+            "label": "八卦板",
+            "text": "八卦板"
+          }
+        }
+      },
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "hero": {
+          "type": "image",
+          "url": "https://i.imgur.com/EhqYOr0.png",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "message",
+            "label": "西斯板",
+            "text": "西斯板"
+          }
+        }
+      },
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "hero": {
+          "type": "image",
+          "url": "https://i.imgur.com/POfRi3G.png",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "message",
+            "label": "租屋板",
+            "text": "租屋板"
+          }
+        }
+      },
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "hero": {
+          "type": "image",
+          "url": "https://i.imgur.com/POfRi3G.png",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "message",
+            "label": "蘆洲租屋",
+            "text": "蘆洲租屋"
+          }
+        }
+      }
+    ]
+  }
