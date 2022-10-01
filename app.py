@@ -101,7 +101,14 @@ def handle_message(event):
             line_bot_api.reply_message(event.reply_token, message)
         )
 
-                
+    elif "聯盟戰棋" in msg :
+        message = TFT_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            line_bot_api.reply_message(event.reply_token, message)
+        )
+
+     
     else:
         line_bot_api.reply_message(
             event.reply_token,

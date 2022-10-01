@@ -363,7 +363,7 @@ def point_news_crawler():
     message = FlexSendMessage(alt_text="熱門文章",contents=contents)
 
     return message
-# point_news_crawler()
+
 #PTT-熱門看板
 def PTT_HOT_crawler():
     
@@ -680,6 +680,96 @@ def PTT_Rent_crawler():
 
     return message
 
+#TFT-聯盟戰棋-波堤
+def TFT_crawler():
 
+    url = 'https://www.upmedia.mg/search.php?sh_keyword=%E5%95%B5%E7%B7%B9'
+
+    headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
+
+    response = requests.get(url,headers=headers)
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.select("#news-list > div > dl > dd > a")
+    times = soup.select("#news-list > div > dl > dd > div.time")
+    img_urls= soup.select("#news-list > div > dl > dt > a > img")
+
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+
+    index = 0
+    for title,time,img_url in zip(titles,times,img_urls):
+        if index < 10:
+            bo_title = title.text
+            bo_href = title.get("href")
+            http = "https://www.upmedia.mg/"
+            bo_http = http + bo_href
+            bo_time = time.text.replace(" ","").replace("\n","")
+            bo_img  = img_url.get("src")
+            img_http = "https://www.upmedia.mg/"
+            bo_img_http = img_http + bo_img
+            # print(bo_title)
+            # print(bo_time)
+            # print(bo_http)
+            # print(bo_img_http)
+        
+            bubble = {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": bo_img_http,
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": bo_http
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": bo_title,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
+                                "action": {
+                                "type": "uri",
+                                "label": "點擊前往",
+                                "uri": bo_http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [],
+                                "margin": "sm"
+                            }
+                            ],
+                            "flex": 0
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contents)
+    message = FlexSendMessage(alt_text="聯盟戰棋",contents=contents)
+
+    return message
 
 
