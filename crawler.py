@@ -772,4 +772,90 @@ def TFT_crawler():
 
     return message
 
+# 3c 科技新報
+
+def news_3c_crawler():
+
+    url = 'https://ccc.technews.tw/'
+
+    headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
+
+    response = requests.get(url,headers=headers)
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    #用select 獲取標籤底下的標籤 格式為 標籤.classname+空格+底下的標籤+空格+底下的標籤
+    titles = soup.select("h1.entry-title a")
+    img_urls= soup.select("div.img a img")
+
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+
+    index = 0
+    for title,img_url in zip(titles,img_urls):
+        if index < 10:
+            news3c_title = title.text
+            news3c_http = title.get("href")
+            news3c_img = img_url.get("src")
+            print(news3c_title)
+            print(news3c_http)
+            print(news3c_img)
+        
+            bubble = {
+                        "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": news3c_img,
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": news3c_http
+                            }
+                        },
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "text",
+                                "text": news3c_title,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
+                                "action": {
+                                "type": "uri",
+                                "label": "點擊前往",
+                                "uri": news3c_http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [],
+                                "margin": "sm"
+                            }
+                            ],
+                            "flex": 0
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contents)
+    message = FlexSendMessage(alt_text="科技新聞",contents=contents)
+
+    return message
 

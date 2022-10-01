@@ -37,6 +37,27 @@
             "text": "財經新聞"
           }
         }
+      },
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "action": {
+          "type": "message",
+          "label": "科技新聞",
+          "text": "科技新聞"
+        },
+        "hero": {
+          "type": "image",
+          "url": "https://i.imgur.com/YOhrXiF.png",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "message",
+            "label": "科技新聞",
+            "text": "科技新聞"
+          }
+        }
       }
     ]
   }

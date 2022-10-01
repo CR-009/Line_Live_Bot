@@ -63,6 +63,10 @@ def handle_message(event):
     elif "財經新聞" in msg :
         message = finance_news_crawler()
         line_bot_api.reply_message(event.reply_token, message)
+    
+    elif "科技新聞" in msg :
+        message = news_3c_crawler()
+        line_bot_api.reply_message(event.reply_token, message)
 
     elif '搜尋' in msg:
         keyword = msg
