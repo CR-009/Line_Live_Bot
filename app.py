@@ -112,6 +112,13 @@ def handle_message(event):
             line_bot_api.reply_message(event.reply_token, message)
         )
 
+    elif "18c" in msg :
+        message = c18comic_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            line_bot_api.reply_message(event.reply_token, message)
+        ) 
+
      
     else:
         line_bot_api.reply_message(
