@@ -895,53 +895,56 @@ def c18comic_crawler():
 
             bubble = {
                         "type": "bubble",
-                        "hero": {
-                            "type": "image",
-                            "url": c18jpg_url,
-                            "size": "full",
-                            "aspectRatio": "20:13",
-                            "aspectMode": "cover",
-                            "action": {
-                            "type": "uri",
-                            "uri": c18comic_url
-                            }
-                        },
                         "body": {
                             "type": "box",
                             "layout": "vertical",
                             "contents": [
                             {
-                                "type": "text",
-                                "text": c18title,
-                                "weight": "bold",
-                                "size": "xl",
-                                "wrap": True
-                            }
-                            ]
-                        },
-                        "footer": {
-                            "type": "box",
-                            "layout": "vertical",
-                            "spacing": "sm",
-                            "contents": [
-                            {
-                                "type": "button",
-                                "style": "link",
-                                "height": "sm",
+                                "type": "image",
+                                "url": c18jpg_url,
+                                "size": "full",
+                                "aspectMode": "cover",
+                                "aspectRatio": "2:3",
+                                "gravity": "top",
                                 "action": {
                                 "type": "uri",
-                                "label": "點擊前往",
+                                "label": "action",
                                 "uri": c18comic_url
                                 }
                             },
                             {
                                 "type": "box",
                                 "layout": "vertical",
-                                "contents": [],
-                                "margin": "sm"
+                                "contents": [
+                                {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": c18title,
+                                        "size": "xl",
+                                        "color": "#ffffff",
+                                        "weight": "bold"
+                                    }
+                                    ]
+                                }
+                                ],
+                                "position": "absolute",
+                                "offsetBottom": "0px",
+                                "offsetStart": "0px",
+                                "offsetEnd": "0px",
+                                "backgroundColor": "#9D9D9D80",
+                                "paddingAll": "20px",
+                                "paddingTop": "18px",
+                                "action": {
+                                "type": "uri",
+                                "label": "action",
+                                "uri": c18comic_url
+                                }
                             }
                             ],
-                            "flex": 0
+                            "paddingAll": "0px"
                         }
                         }
             contents['contents'].append(bubble)
@@ -950,4 +953,4 @@ def c18comic_crawler():
     message = FlexSendMessage(alt_text="18c",contents=contents)
 
     return message
-c18comic_crawler()
+# c18comic_crawler()
