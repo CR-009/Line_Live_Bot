@@ -119,6 +119,13 @@ def handle_message(event):
             line_bot_api.reply_message(event.reply_token, message)
         ) 
 
+    elif "avgle" in msg :
+        message = Avgle_crawler()
+        line_bot_api.reply_message(
+            event.reply_token,
+            line_bot_api.reply_message(event.reply_token, message)
+        )     
+
      
     else:
         line_bot_api.reply_message(

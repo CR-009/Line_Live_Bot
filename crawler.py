@@ -954,3 +954,97 @@ def c18comic_crawler():
 
     return message
 # c18comic_crawler()
+
+def Avgle_crawler():
+
+    url = 'https://avgle.com/'
+
+    headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
+
+    response = requests.get(url,headers=headers)
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    titles = soup.select("#wrapper > div.container > div:nth-child(2) > div.col-md-8.col-sm-7 > div > div:nth-child(n) > div > a > span")
+    video_urls = soup.select("#wrapper > div.container > div:nth-child(2) > div.col-md-8.col-sm-7 > div > div:nth-child(n) > div > a")
+    img_urls = soup.find_all("img","lazy img-responsive")
+   
+    # print(soup)
+    # print(titles)
+    # print(video_urls)
+    # print(img_urls)
+    contents = dict()
+    contents['type'] = 'carousel'
+    contents['contents'] = []
+
+    index = 0
+    for AVtitle ,AVvideo_url,img_url in zip(titles ,video_urls,img_urls):
+        if index < 10:
+            AVtitle = AVtitle.text[:25]
+            AVvideo_url = AVvideo_url.get("href")[7:18]
+            Http = "https://www.avgle.com/video/"
+            AVvideo_Http = Http + AVvideo_url
+            AVimg = img_url.get("data-original")
+            # print(AVtitle)
+            # print(AVvideo_Http)
+            # print(AVimg)
+
+            bubble = {
+                        "type": "bubble",
+                        "body": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                            {
+                                "type": "image",
+                                "url": AVimg,
+                                "size": "full",
+                                "aspectMode": "cover",
+                                "aspectRatio": "2:3",
+                                "gravity": "top",
+                                "action": {
+                                "type": "uri",
+                                "label": "action",
+                                "uri": AVvideo_Http
+                                }
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [
+                                {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": AVtitle,
+                                        "size": "xl",
+                                        "color": "#ffffff",
+                                        "weight": "bold"
+                                    }
+                                    ]
+                                }
+                                ],
+                                "position": "absolute",
+                                "offsetBottom": "0px",
+                                "offsetStart": "0px",
+                                "offsetEnd": "0px",
+                                "backgroundColor": "#9D9D9D80",
+                                "paddingAll": "20px",
+                                "paddingTop": "18px",
+                                "action": {
+                                "type": "uri",
+                                "label": "action",
+                                "uri": AVvideo_Http
+                                }
+                            }
+                            ],
+                            "paddingAll": "0px"
+                        }
+                        }
+            contents['contents'].append(bubble)
+            index+=1
+    # print(contents)
+    message = FlexSendMessage(alt_text="18c",contents=contents)
+
+    return message       
