@@ -990,61 +990,58 @@ def Avgle_crawler():
 
             bubble = {
                         "type": "bubble",
+                        "hero": {
+                            "type": "image",
+                            "url": AVimg,
+                            "size": "full",
+                            "aspectRatio": "20:13",
+                            "aspectMode": "cover",
+                            "action": {
+                            "type": "uri",
+                            "uri": AVvideo_Http
+                            }
+                        },
                         "body": {
                             "type": "box",
                             "layout": "vertical",
                             "contents": [
                             {
-                                "type": "image",
-                                "url": AVimg,
-                                "size": "full",
-                                "aspectMode": "cover",
-                                "aspectRatio": "2:3",
-                                "gravity": "top",
+                                "type": "text",
+                                "text": AVtitle,
+                                "weight": "bold",
+                                "size": "xl",
+                                "wrap": True
+                            }
+                            ]
+                        },
+                        "footer": {
+                            "type": "box",
+                            "layout": "vertical",
+                            "spacing": "sm",
+                            "contents": [
+                            {
+                                "type": "button",
+                                "style": "link",
+                                "height": "sm",
                                 "action": {
                                 "type": "uri",
-                                "label": "action",
+                                "label": "點擊前往",
                                 "uri": AVvideo_Http
                                 }
                             },
                             {
                                 "type": "box",
                                 "layout": "vertical",
-                                "contents": [
-                                {
-                                    "type": "box",
-                                    "layout": "vertical",
-                                    "contents": [
-                                    {
-                                        "type": "text",
-                                        "text": AVtitle,
-                                        "size": "xl",
-                                        "color": "#ffffff",
-                                        "weight": "bold"
-                                    }
-                                    ]
-                                }
-                                ],
-                                "position": "absolute",
-                                "offsetBottom": "0px",
-                                "offsetStart": "0px",
-                                "offsetEnd": "0px",
-                                "backgroundColor": "#9D9D9D80",
-                                "paddingAll": "20px",
-                                "paddingTop": "18px",
-                                "action": {
-                                "type": "uri",
-                                "label": "action",
-                                "uri": AVvideo_Http
-                                }
+                                "contents": [],
+                                "margin": "sm"
                             }
                             ],
-                            "paddingAll": "0px"
+                            "flex": 0
                         }
                         }
             contents['contents'].append(bubble)
             index+=1
     # print(contents)
-    message = FlexSendMessage(alt_text="18c",contents=contents)
+    message = FlexSendMessage(alt_text="聯盟戰棋",contents=contents)
 
-    return message       
+    return message
